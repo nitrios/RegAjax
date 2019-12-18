@@ -1,0 +1,5 @@
+bin/
+obj/
+/packages/
+/.idea/.idea.RegAjax/.idea/
+/.idea/.idea.RegAjax/riderModule.iml
