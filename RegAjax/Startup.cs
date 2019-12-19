@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RegAjax.Data;
+using RegAjax.Services;
 
 namespace RegAjax
 {
@@ -27,7 +30,13 @@ namespace RegAjax
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
 
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddControllersWithViews();
+
+            services.AddScoped<IRegistrationService, RegistrationService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

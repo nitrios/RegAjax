@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RegAjax.Data.Entities
 {
-    public class Question
+    public class Variant
     {
         [Key]
         [Required]
@@ -13,7 +12,8 @@ namespace RegAjax.Data.Entities
         
         [Required] public string Name { get; set; }
         
-        [ForeignKey("QuestionId")]
-        public ICollection<Variant> Variants { get; set; }
+        [Required] public long QuestionId { get; set; }
+        
+        public virtual Question Question { get; set; }
     }
 }

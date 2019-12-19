@@ -1,26 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RegAjax.Models;
+using RegAjax.Services;
 
 namespace RegAjax.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IRegistrationService _registrationService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IRegistrationService registrationService)
         {
             _logger = logger;
+            _registrationService = registrationService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(CancellationToken cancel)
         {
-            return View();
+            var questions = await _registrationService.GetAsync(cancel);
+            
+            var model = new RegistrationModel()
+            {
+                FirstName = "",
+                SecondName = "",
+                Phone = "",
+                Questions = questions.Select(q => new QuestionModel()
+                {
+                    Id = q.Id,
+                    Name = q.Name,
+                    Variants = q.Variants.Select(v => new VariantModel()
+                    {
+                        Id = v.Id,
+                        Name = v.Name
+                    }).ToList()
+                }).ToList()
+            };
+            
+            return View(model);
         }
 
         public IActionResult Privacy()

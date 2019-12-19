@@ -1,19 +1,17 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RegAjax.Data.Entities
 {
-    public class Question
+    public class Answer
     {
         [Key]
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         
-        [Required] public string Name { get; set; }
+        public int VariantId { get; set; }
         
-        [ForeignKey("QuestionId")]
-        public ICollection<Variant> Variants { get; set; }
+        public Variant Variant { get; set; }
     }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace RegAjax.Models
 {
     public class ErrorViewModel
