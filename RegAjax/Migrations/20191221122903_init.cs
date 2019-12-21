@@ -74,18 +74,24 @@ namespace RegAjax.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    VariantId = table.Column<int>(nullable: false),
-                    VariantId1 = table.Column<long>(nullable: true)
+                    RegistrationId = table.Column<long>(nullable: false),
+                    VariantId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Answers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answers_Variants_VariantId1",
-                        column: x => x.VariantId1,
+                        name: "FK_Answers_Registrations_RegistrationId",
+                        column: x => x.RegistrationId,
+                        principalTable: "Registrations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Answers_Variants_VariantId",
+                        column: x => x.VariantId,
                         principalTable: "Variants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -139,9 +145,14 @@ namespace RegAjax.Migrations
                 values: new object[] { 7L, "Вода", 2L });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_VariantId1",
+                name: "IX_Answers_RegistrationId",
                 table: "Answers",
-                column: "VariantId1");
+                column: "RegistrationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_VariantId",
+                table: "Answers",
+                column: "VariantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Variants_QuestionId",
@@ -155,10 +166,10 @@ namespace RegAjax.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "Registrations");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Registrations");
 
             migrationBuilder.DropTable(
                 name: "Variants");

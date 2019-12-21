@@ -25,5 +25,13 @@ namespace RegAjax.Services
                 .Take(100)
                 .ToListAsync(cancel);
         }
+
+        public async Task<long> Save(Registration registration, CancellationToken cancel)
+        {
+            await _context.Registrations.AddAsync(registration, cancel);
+            await _context.SaveChangesAsync(cancel);
+
+            return registration.Id;
+        }
     }
 }

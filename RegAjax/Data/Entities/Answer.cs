@@ -10,7 +10,11 @@ namespace RegAjax.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         
-        public int VariantId { get; set; }
+        public long RegistrationId { get; set; }
+            
+        public Registration Registration { get; set; }
+        
+        public long VariantId { get; set; }
         
         public Variant Variant { get; set; }
     }

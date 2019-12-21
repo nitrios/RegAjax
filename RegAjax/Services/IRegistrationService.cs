@@ -8,5 +8,7 @@ namespace RegAjax.Services
     public interface IRegistrationService
     {
         Task<List<Question>> GetAsync(CancellationToken cancel);
+
+        Task<long> Save(Registration registration, CancellationToken cancel);
     }
 }

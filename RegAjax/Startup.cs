@@ -36,7 +36,9 @@ namespace RegAjax
             
             services.AddControllersWithViews();
 
+            services.AddScoped<IAnswerService, AnswerService>();
             services.AddScoped<IRegistrationService, RegistrationService>();
+            services.AddScoped<IVariantService, VariantService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

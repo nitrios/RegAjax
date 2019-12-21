@@ -8,5 +8,8 @@ namespace RegAjax.Models
         
         [Display(Name = "Вариант")]
         public string Name { get; set; }
+
+        [Display(Name = "Выбор")]
+        public bool Checked { get; set; }
     }
 }
