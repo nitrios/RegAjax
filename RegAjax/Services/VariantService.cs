@@ -15,7 +15,7 @@ namespace RegAjax.Services
             _context = context;
         }
         
-        public async Task<Variant> Get(long id, CancellationToken cancel)
+        public async Task<Variant> GetAsync(long id, CancellationToken cancel)
         {
             return await _context.Variants
                 .FirstOrDefaultAsync(v => v.Id == id, cancellationToken: cancel);

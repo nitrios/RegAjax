@@ -16,7 +16,14 @@ namespace RegAjax.Services
         {
             _context = context;
         }
-        
+
+        public async Task<Question> GetAsync(long id, CancellationToken cancel)
+        {
+            return await _context.Questions
+                .Include(q => q.Variants)
+                .FirstOrDefaultAsync(q => q.Id == id, cancel);
+        }
+
         public async Task<List<Question>> GetAsync(CancellationToken cancel)
         {
             return await _context.Questions

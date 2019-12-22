@@ -6,6 +6,6 @@ namespace RegAjax.Services
 {
     public interface IVariantService
     {
-        Task<Variant> Get(long id, CancellationToken cancel);
+        Task<Variant> GetAsync(long id, CancellationToken cancel);
     }
 }

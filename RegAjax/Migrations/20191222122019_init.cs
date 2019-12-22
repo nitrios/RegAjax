@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RegAjax.Migrations
 {
@@ -27,7 +28,8 @@ namespace RegAjax.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(nullable: false),
                     SecondName = table.Column<string>(nullable: false),
-                    Phone = table.Column<string>(nullable: false)
+                    Phone = table.Column<string>(nullable: false),
+                    BirthDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

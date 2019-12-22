@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Html
+@model List<RegAjax.Models.RegistrationModel>
+
+@{
     ViewData["Title"] = "Privacy Policy";
 }
 <h1>@ViewData["Title"]</h1>
@@ -10,4 +13,76 @@
     <input id="submit" type="submit" value="Logout" class="btn btn-default"/>
 }
 
+@using (Html.BeginForm(new {id = "filter"}))
+{
+    <div class="form-group">
+        @Html.Label("Answer")
+        
+        @{
+            var variants = GetVariants();
+            @Html.DropDownList("filterVariantId",
+                variants.Select(v => new SelectListItem()
+                {
+                    Text = v.Name,
+                    Value = v.Id.ToString()
+                }),
+                new {htmlAttributes = new {@class = "form-control"}})
+        }
+    </div>
+    
+    <input id="submit" type="submit" value="Filter" class="btn btn-default"/>
+}
 
+<table class="table">
+    <thead>
+    <tr>
+        <th>FirstName</th>
+        <th>SecondName</th>
+        <th>Phone</th>
+        <th>BirthDate</th>
+        <th>Answers</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var registration in Model)
+    {
+        <tr>
+            <td>@registration.FirstName</td>
+            <td>@registration.SecondName</td>
+            <td>@registration.Phone</td>
+            <td>@registration.BirthDate</td>
+            <td>@GetAnswers(registration)</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@functions
+{
+    private IHtmlContent GetAnswers(RegistrationModel registrationModel)
+    {
+        var result = "";
+
+        foreach (var question in registrationModel.Questions)
+        {
+            result += question.Name + "</br>";
+
+            foreach (var variant in question.Variants)
+            {
+                result += " - " + variant.Name  + "</br>";
+            }
+        }
+
+        return Html.Raw(result);
+    }
+
+    private List<VariantModel> GetVariants()
+    {
+        return Model
+            .SelectMany(r => r.Questions)
+            .SelectMany(q => q.Variants)
+            .GroupBy(v => new {v.Id, v.Name})
+            .Select(g => g.First())
+            .ToList();
+    }
+}

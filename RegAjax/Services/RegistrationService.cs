@@ -20,6 +20,7 @@ namespace RegAjax.Services
         public async Task<List<Registration>> GetAsync(CancellationToken cancel)
         {
             return await _context.Registrations
+                .Include(r => r.Answers)
                 .OrderBy(q => q.Id)
                 .Take(100)
                 .ToListAsync(cancel);
@@ -29,7 +30,7 @@ namespace RegAjax.Services
         {
             return await _context.Registrations
                 .Include(r => r.Answers)
-                .Where(q => q.Answers.Select(a => a.VariantId == variantId).Any())
+                .Where(q => q.Answers.Any(a => a.VariantId == variantId))
                 .OrderBy(q => q.Id)
                 .Take(100)
                 .ToListAsync(cancel);

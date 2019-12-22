@@ -63,16 +63,64 @@ namespace RegAjax.Controllers
 
         public IActionResult Privacy()
         {
-            return IsAuthenticated ? View("Admin") : View();
+            if (IsAuthenticated)
+                return RedirectToAction("Admin");
+            
+            return View();
         }
 
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> Admin(long filterVariant, CancellationToken cancel)
+        public async Task<IActionResult> Admin(long filterVariantId, CancellationToken cancel)
         {
-            var model = filterVariant != 0
-                ? await _registrationService.GetAsync(filterVariant, cancel)
+            var model = new List<RegistrationModel>();
+            
+            var registrations = filterVariantId != 0
+                ? await _registrationService.GetAsync(filterVariantId, cancel)
                 : await _registrationService.GetAsync(cancel);
 
+            foreach (var registration in registrations)
+            {
+                var registrationModel = new RegistrationModel()
+                {
+                    FirstName = registration.FirstName,
+                    SecondName = registration.SecondName,
+                    Phone = registration.Phone,
+                    BirthDate = registration.BirthDate,
+                    Questions = new List<QuestionModel>()
+                };
+                
+                var variantIdList = registration.Answers
+                    .Select(d => d.VariantId)
+                    .ToList();
+                
+                foreach (var variantId in variantIdList)
+                {
+                    var dbVariant = await _variantService.GetAsync(variantId, cancel);
+                    var dbQuestion = await _questionService.GetAsync(dbVariant.QuestionId, cancel);
+
+                    var questionModel = registrationModel.Questions.FirstOrDefault(q => q.Id == dbQuestion.Id);
+                    if (questionModel == null)
+                    {
+                        questionModel = new QuestionModel()
+                        {
+                            Id = dbQuestion.Id,
+                            Name = dbQuestion.Name,
+                            Variants = new List<VariantModel>()
+                        };
+                    
+                        registrationModel.Questions.Add(questionModel);
+                    }
+                
+                    questionModel.Variants.Add(new VariantModel()
+                    {
+                        Id = dbVariant.Id,
+                        Name = dbVariant.Name
+                    });
+                }
+                
+                model.Add(registrationModel);
+            }
+            
             return View(model);
         }
 
@@ -147,7 +195,15 @@ namespace RegAjax.Controllers
             CancellationToken cancel)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+            {
+                var errors = "";
+                
+                foreach (var value in ModelState.Values)
+                foreach (var error in value.Errors)
+                    errors += error.ErrorMessage + "</br>";
+                
+                return Json(errors);
+            }
 
             var registry = new Registration
             {
@@ -174,7 +230,7 @@ namespace RegAjax.Controllers
                 }
             }
 
-            return Ok("Success");
+            return Json("Success");
         }
     }
 }

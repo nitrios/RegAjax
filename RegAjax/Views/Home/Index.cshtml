@@ -72,14 +72,17 @@
                     const url = f.attr("action");
                     const formData = f.serialize();
                     
-                    $.post(url, formData, function(data) {
-                            $("#postResult").html(data);
-                        });
+                    $.post(url, formData)
+                    .done(function(data) {
+                        $("#postResult").html(data);
+                    })
+
                 }
                 return false;
             });
         });
     </script>
     }
+    
     
 </div>

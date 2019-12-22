@@ -7,6 +7,8 @@ namespace RegAjax.Services
 {
     public interface IQuestionService
     {
+        Task<Question> GetAsync(long id, CancellationToken cancel);
+        
         Task<List<Question>> GetAsync(CancellationToken cancel);
     }
 }
