@@ -29,6 +29,12 @@
             @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
         </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthDate)
+            @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+        </div>
 
         @Html.LabelFor(model => model.Questions)
             @for (var i = 0; i < Model.Questions.Count; i++)
@@ -60,14 +66,16 @@
         $(function () {
             $('#submit').on('click', function (evt) {
                 
-                var f = $("#regForm");
-                var url = f.attr("action");
-                var formData = f.serialize();
-                
-                $.post(url, formData, function(data) {
-                        $("#postResult").html(data);
-                    });
-                
+                const f = $("#regForm");
+                if (f.valid())
+                {
+                    const url = f.attr("action");
+                    const formData = f.serialize();
+                    
+                    $.post(url, formData, function(data) {
+                            $("#postResult").html(data);
+                        });
+                }
                 return false;
             });
         });

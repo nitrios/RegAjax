@@ -22,22 +22,24 @@ namespace RegAjax.Controllers
         private readonly IAnswerService _answerService;
         private readonly IRegistrationService _registrationService;
         private readonly IVariantService _variantService;
+        private readonly IQuestionService _questionService;
 
         public HomeController(ILogger<HomeController> logger, IAnswerService answerService,
-            IRegistrationService registrationService, IVariantService variantService)
+            IRegistrationService registrationService, IVariantService variantService, IQuestionService questionService)
         {
             _logger = logger;
 
             _answerService = answerService;
             _registrationService = registrationService;
             _variantService = variantService;
+            _questionService = questionService;
         }
 
         private bool IsAuthenticated => User?.Identity != null && User.Identity.IsAuthenticated;
 
         public async Task<IActionResult> Index(CancellationToken cancel)
         {
-            var questions = await _registrationService.GetAsync(cancel);
+            var questions = await _questionService.GetAsync(cancel);
 
             var model = new RegistrationModel()
             {
@@ -65,9 +67,13 @@ namespace RegAjax.Controllers
         }
 
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public IActionResult Admin()
+        public async Task<IActionResult> Admin(long filterVariant, CancellationToken cancel)
         {
-            return View();
+            var model = filterVariant != 0
+                ? await _registrationService.GetAsync(filterVariant, cancel)
+                : await _registrationService.GetAsync(cancel);
+
+            return View(model);
         }
 
         [AllowAnonymous]
@@ -147,7 +153,8 @@ namespace RegAjax.Controllers
             {
                 FirstName = registrationModel.FirstName,
                 SecondName = registrationModel.SecondName,
-                Phone = registrationModel.Phone
+                Phone = registrationModel.Phone,
+                BirthDate = registrationModel.BirthDate
             };
 
             await _registrationService.Save(registry, cancel);

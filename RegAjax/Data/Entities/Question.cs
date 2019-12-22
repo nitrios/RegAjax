@@ -14,6 +14,6 @@ namespace RegAjax.Data.Entities
         [Required] public string Name { get; set; }
         
         [ForeignKey("QuestionId")]
-        public ICollection<Variant> Variants { get; set; }
+        public virtual ICollection<Variant> Variants { get; set; }
     }
 }

@@ -10,16 +10,25 @@ namespace RegAjax.Services
 {
     class AnswerService : IAnswerService
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public AnswerService(ApplicationDbContext context)
         {
             _context = context;
         }
-        
-        public async Task<List<Answer>> GetAsync(long registrationId, CancellationToken cancel)
+
+        public async Task<List<Answer>> GetByVariantIdAsync(long variantId, CancellationToken cancel)
         {
             return await _context.Answers
+                .Where(a => a.RegistrationId == variantId)
+                .OrderBy(a => a.Id)
+                .ToListAsync(cancel);
+        }
+        
+        public async Task<List<Answer>> GetByRegistrationIdAsync(long registrationId, CancellationToken cancel)
+        {
+            return await _context.Answers
+                .Where(a => a.RegistrationId == registrationId)
                 .OrderBy(a => a.Id)
                 .ToListAsync(cancel);
         }

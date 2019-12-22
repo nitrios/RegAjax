@@ -37,6 +37,7 @@ namespace RegAjax
             services.AddControllersWithViews();
 
             services.AddScoped<IAnswerService, AnswerService>();
+            services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IRegistrationService, RegistrationService>();
             services.AddScoped<IVariantService, VariantService>();
         }

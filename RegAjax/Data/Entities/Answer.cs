@@ -16,6 +16,6 @@ namespace RegAjax.Data.Entities
         
         public long VariantId { get; set; }
         
-        public Variant Variant { get; set; }
+        public virtual Variant Variant { get; set; }
     }
 }
